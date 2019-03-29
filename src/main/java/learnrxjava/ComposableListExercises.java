@@ -127,11 +127,11 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             // Note that you can apply a projectionFunction to a value like this:
             //  projectionFunction.apply(5)
             // ------------ INSERT CODE HERE! ----------------------------
-            
+            results.add(projectionFunction.apply(itemInList));
         });
         
-        //return results;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return results;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
     /*
@@ -148,8 +148,10 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             new Video(675465, "Fracture", 5.0));
          
         // complete this expression 
-        // return newReleases.map(video -> 
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return newReleases.map(video -> {
+            return json("id", video.id, "title", video.title);
+        });
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -189,11 +191,14 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         newReleases.forEach(video -> {
             // Insert code here that adds a video to the highRatedVideos list
             // if it has a rating of 5.0.
+            if(video.rating == 5.0){
+                highRatedVideos.add(video);
+            }
 
         });
         
-        // return highRatedVideos;
-        throw new UnsupportedOperationException("Not implemented yet.");        
+        return highRatedVideos;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
     /*
@@ -221,11 +226,13 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             // Note: you can apply the predicateFunction to a value like this:
             // predicateFunction.test(5)
             // ------------ INSERT CODE HERE! ----------------------------
-
+            if(predicateFunction.test(itemInList)){
+                results.add(itemInList);
+            }
         });
 
-        // return results;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return results;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -264,9 +271,8 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // Chain the filter and map functions to select the id of all videos
         // with a rating of 5.0.
         // ------------ INSERT CODE HERE! -----------------------------------
-        //return newReleases // Complete this expression
-
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return newReleases.filter(video->{video.rating == 5.0}).map(video->{video.id}); // Complete this expression
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -300,8 +306,13 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // Use two nested forEach loops to flatten the movieLists into a list of
         // video ids.
         // ------------   INSERT CODE HERE!  -----------------------------------
-        //return allVideoIdsInMovieLists;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        movieLists.forEach(itemInMovieList -> {
+            itemInMovieList.videos.forEach(item-> {
+                allVideoIdsInMovieLists.add(item.id);
+            })
+        })
+        return allVideoIdsInMovieLists;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
     /*
@@ -338,11 +349,14 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             // Note that you can apply a projectionFunction to a value like this:
             // projectionFunctionThatReturnsList.apply(5)
             // ------------ INSERT CODE HERE! ----------------------------
-
+            ComposableList<R> l = projectionFunctionThatReturnsList.apply(itemInList);
+            l.forEach(r -> {
+                results.add(r);
+            });
         }
         
-        //return results;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return results;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     
     /*
@@ -372,9 +386,9 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // return movieLists // finish expression
         // ------------   INSERT CODE HERE!  -----------------------------------
         // **************ANSWER START***************//
-        // return movieLists.
-        //     concatMap(movieList -> 
-        //         movieList.videos.map(video -> video.id));
+         return movieLists.
+             concatMap(movieList ->
+                 movieList.videos.map(video -> video.id));
         // **************ANSWER END***************//
         throw new UnsupportedOperationException("Not implemented yet.");
     }
@@ -449,8 +463,15 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         //   {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
         // };
 
-        // return movieLists // Complete this expression!
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return movieLists.concatMap(ml -> {
+            return ml.videos.concatMap(v -> {
+                ComposableList<BoxArt> boxart = v.boxarts.filter(ba -> ba.width == 150 && ba.height == 200);
+                return boxart.map(ba -> {
+                    return json("id", v.id, "title", v.title, "boxart", ba.url);
+                });
+            });
+        }); // Complete this expression!
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -486,11 +507,12 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                     // ****** INSERT CODE HERE ********
                     // Assign the largestBoxart to the current boxart, and assign the maxSize to the currentSize.
                     // ****** INSERT CODE HERE ********
+                    largestBoxart = boxart;
+                    maxSize = currentSize;
                 }
             }
-
-        // return largestBoxart;
-        throw new UnsupportedOperationException("Not implemented yet.");
+            return largestBoxart;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     /*
     Exercise 14: Implement reduce()
@@ -520,6 +542,7 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             // ************ INSERT CODE HERE **************
             //  if the list is empty, return this
             // ********************************************
+            return this;
         } else {
             accumulatedValue = this.get(0);
 
@@ -531,14 +554,14 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                 // Set accumulatedValue to the result of passing accumulatedValue and the list value at the 
                 // counter index to the combiner function.
                 // ****** INSERT CODE HERE ********
-
+                accumulatedValue = combiner.apply(accumulatedValue, this.get(counter));
                 counter++;
             }
 
-            //return ComposableListExercises.of(accumulatedValue);
+            return ComposableListExercises.of(accumulatedValue);
         }
 
-        throw new UnsupportedOperationException("Not implemented yet.");
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -596,9 +619,16 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // returns a list with one item.
 
         // complete the expression below
-        //return ratings.reduce
+        return ratings.reduce(-1, (max, item) ->{
+            if(item > max){
+                return item;
+            } else {
+                return max;
+            }
+        });
 
-        throw new UnsupportedOperationException("Not implemented yet.");
+
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
     /*
     Exercise 17: Retrieve url of the largest boxart
@@ -616,8 +646,17 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
 
         // You should return a list containing only the largest box art. Remember that reduce always
         // returns a list with one item.
-        // return boxarts.reduce  
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return boxarts.reduce((max, box) -> {
+            int maxSize = max.height * max.width;
+            int boxSize = box.height * box.width;
+            if(maxSize > boxSize){
+                return max;
+            } else {
+                return box;
+            }
+        }).map(boxArt -> boxArt.url);
+
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -677,7 +716,9 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                 // exercise simply copy the accumulatedMap into a new map, add the video information to the copy, 
                 // and return the copy.
                 // ************ INSERT CODE HERE ************
-                throw new UnsupportedOperationException("Not implemented yet.");
+                accumulatedMap.put(video.id, video.title);
+                return accumulatedMap;
+                //throw new UnsupportedOperationException("Not implemented yet.");
             });
     }
 
@@ -750,13 +791,34 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // ];
 
         // Uncomment the code below and finish the expression.
-        /*
+        return movieLists.concatMap(ml -> {
+            return ml.videos.concatMap(v -> {
+                ComposableList<BoxArt> boxart = v.boxarts.filter(ba -> ba.width == 150 && ba.height == 200);
+                return boxart.map(ba -> {
+                    return json("id", v.id, "title", v.title, "boxart", ba.url);
+                });
+            });
+        });
         return movieLists.
             concatMap(movieList -> {
+                return movieList.videos.concatMap(video -> {
+                    return video.boxarts.reduce((max, box) -> {
+                        int maxSize = max.height * max.width;
+                        int boxSize = box.height * box.width;
+                        if(boxSize < maxSize) {
+                            return box;
+                        } else {
+                            return max;
+                        }
+                    }).map(maxBoxart -> {
+                        return json("id", video.id, "title", video.title, "boxart", maxBoxart.url);
+                    });
 
-            })
-         */
-        throw new UnsupportedOperationException("Not implemented yet.");
+                });
+
+            });
+
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -805,10 +867,11 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         for (int counter = 0; counter < Math.min(videos.size(), bookmarks.size()); counter++) {
             // Insert code here to create a {"videoId" : videoId, "bookmarkId" : bookmarkId} JSON 
             // using json() and add it to the videoIdAndBookmarkIdPairs list.
+            videoIdAndBookmarkIdPairs.add(json("videoId":videos.get(counter).id, "bookmarkId":bookmarks.get(counter).id));
         }
 
-        // return videoIdAndBookmarkIdPairs;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return videoIdAndBookmarkIdPairs;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -831,10 +894,11 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         for (int counter = 0; counter < Math.min(left.size(), right.size()); counter++) {
             // Add code here to apply the combinerFunction to the left and right-hand items in the 
             // respective lists, and add the result to the results List
+            results.add(combinerFunction.apply(left.get(counter), right.get(counter)));
         }
 
-        // return results;
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return results;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -875,8 +939,12 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         );
 
         //... finish this expression
-        // return ComposableListExercises.zip( 
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return ComposableListExercises.zip(
+                videos.map(v -> v.id),
+                bookmarks.map(b -> b.id),
+                (v, b) -> json("videoId", v, "bookmarkId", b));
+        });
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -963,12 +1031,27 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         );
 
         //------------ COMPLETE THIS EXPRESSION --------------
-        /*
-        return movieLists.
-            concatMap(movieList -> {
 
-            });
-        */
+        return movieLists.
+                concatMap(movieList -> {
+                    return movieList.videos.<JSON>concatMap(video -> {
+                        ComposableList<BoxArt> smallestBoxArt = video.boxarts.reduce((smallest, box) -> {
+                            int smallestSize = smallest.height * smallest.width;
+                            int boxSize = box.height * box.width;
+                            if(boxSize < smallestSize) {
+                                return box;
+                            } else {
+                                return smallest;
+                            }
+                        });
+
+                        ComposableList<InterestingMoment> moment = video.interestingMoments.filter(m -> m.type == "Middle");
+                        return ComposableListSolutions.zip(smallestBoxArt, moment, (s, m) -> {
+                            return json("id", video.id, "title", video.title, "time", m.time, "url", s.url);
+                        });
+                    });
+                });
+
 
         throw new UnsupportedOperationException("Not implemented yet.");
     }
